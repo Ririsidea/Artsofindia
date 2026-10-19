@@ -1,0 +1,36 @@
+<section class="our-story-media-text color-{{ section.settings.color_scheme }}">
+  <div class="our-story-media-text__inner page-width-content">
+    <div class="our-story-media-text__content">
+      <h2>{{ section.settings.heading }}</h2>
+      <div class="rte">{{ section.settings.text }}</div>
+      {% if section.settings.button_label != blank %}<a class="button" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>{% endif %}
+    </div>
+    <div class="our-story-media-text__media">
+      {% if section.settings.image != blank %}{{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy' }}{% else %}<placeholder-image data-block-id="{{ section.id }}" data-type="general"></placeholder-image>{% endif %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .our-story-media-text { background: var(--color-background); color: var(--color-foreground); }
+  .our-story-media-text__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 7vw, 96px); align-items: center; padding-block: var(--padding-5xl); }
+  .our-story-media-text__content h2 { margin-top: 0; }
+  .our-story-media-text__content .button { margin-top: var(--padding-lg); }
+  .our-story-media-text__media img, .our-story-media-text__media placeholder-image { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  @media screen and (max-width: 749px) { .our-story-media-text__inner { grid-template-columns: 1fr; padding-block: var(--padding-3xl); } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Our story media and text",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Who We Are" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>ARTSofINDIA.in - Traditional Arts and Crafts from India, is an initiative from 'Sanskriti', which is registered in Bangalore, India. The portal represents the inter-cultural moments of India, when new perspectives arise and much that has been forgotten is rediscovered and replayed. The goal of Sanskriti is to help Indian Traditional Arts and artists get recognition on the global art map.</p>" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Join Our Team" },
+    { "type": "url", "id": "button_link", "label": "Button link", "default": "mailto:info@artsofindia.in" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" }
+  ],
+  "presets": [{ "name": "Our story media and text" }]
+}
+{% endschema %}

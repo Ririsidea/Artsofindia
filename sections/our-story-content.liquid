@@ -1,0 +1,71 @@
+<section class="our-story-content color-{{ section.settings.color_scheme }} our-story-content--{{ section.settings.layout }}">
+  <div class="our-story-content__inner page-width-content">
+    {% if section.settings.heading != blank %}<h2>{{ section.settings.heading }}</h2>{% endif %}
+    {% if section.settings.intro != blank %}<div class="rte our-story-content__intro">{{ section.settings.intro }}</div>{% endif %}
+    {% if section.settings.layout == 'cards' or section.settings.layout == 'team' or section.settings.layout == 'mentors' %}
+      <div class="our-story-content__grid">
+        {% for block in section.blocks %}
+          <article class="our-story-card" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'our-story-card__image' }}{% elsif block.settings.image_url != blank %}<img class="our-story-card__image" src="{{ block.settings.image_url }}" alt="{{ block.settings.name | escape }}" width="800" height="800" loading="lazy">{% elsif section.settings.layout == 'team' %}<div class="our-story-card__placeholder"><placeholder-image data-block-id="{{ block.id }}" data-type="portrait"></placeholder-image></div>{% endif %}
+            {% if block.settings.name != blank %}<h3>{{ block.settings.name }}</h3>{% endif %}
+            {% if block.settings.role != blank %}<p class="our-story-card__role">{{ block.settings.role }}</p>{% endif %}
+            <div class="rte">{{ block.settings.text }}</div>
+          </article>
+        {% endfor %}
+      </div>
+    {% elsif section.settings.layout == 'quote' %}
+      <blockquote>{{ section.settings.intro }}</blockquote>
+    {% else %}
+      <div class="rte our-story-content__body">{{ section.settings.body }}</div>
+    {% endif %}
+    {% if section.settings.button_label != blank %}<a class="button our-story-content__button" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>{% endif %}
+    {% if section.settings.closing != blank %}<p class="our-story-content__closing">{{ section.settings.closing }}</p>{% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .our-story-content { background: var(--color-background); color: var(--color-foreground); }
+  .our-story-content__inner { padding-block: var(--padding-5xl); }
+  .our-story-content__inner > h2 { text-align: center; margin-top: 0; }
+  .our-story-content__intro { max-width: 52rem; margin: 0 auto var(--padding-xl); }
+  .our-story-content__body { max-width: 50rem; margin: 0 auto; }
+  .our-story-content__body p + p { margin-top: var(--padding-lg); }
+  .our-story-content__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap-lg); }
+  .our-story-content--team .our-story-content__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .our-story-content--mentors .our-story-content__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .our-story-card { padding: var(--padding-lg); border: 1px solid rgba(from var(--color-foreground) r g b / .16); }
+  .our-story-card h3 { margin: var(--padding-md) 0 var(--padding-2xs); }
+  .our-story-card__role { margin: 0 0 var(--padding-sm); font-size: var(--font-size--body-sm); opacity: .72; }
+  .our-story-card__image, .our-story-card__placeholder { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .our-story-content--team .our-story-card__image, .our-story-content--team .our-story-card__placeholder { border-radius: 50%; }
+  .our-story-card__placeholder { overflow: hidden; }
+  .our-story-content--cta { background: var(--color-background); }
+  .our-story-content--cta .our-story-content__inner { text-align: center; }
+  .our-story-content--cta .our-story-content__intro { margin-bottom: var(--padding-lg); }
+  .our-story-content__button { margin-inline: auto; }
+  .our-story-content--quote { background: var(--color-foreground); color: var(--color-background); }
+  .our-story-content--quote .our-story-content__inner { max-width: 58rem; text-align: center; }
+  blockquote { margin: 0; font-size: var(--font-h3--size); font-style: italic; }
+  .our-story-content__closing { max-width: 48rem; margin: var(--padding-2xl) auto 0; text-align: center; font-style: italic; }
+  @media screen and (max-width: 749px) { .our-story-content__grid, .our-story-content--team .our-story-content__grid, .our-story-content--mentors .our-story-content__grid { grid-template-columns: 1fr; } .our-story-content__inner { padding-block: var(--padding-3xl); } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Our story content",
+  "settings": [
+    { "type": "select", "id": "layout", "label": "Layout", "options": [{ "value": "rich-text", "label": "Rich text" }, { "value": "long-text", "label": "Long text" }, { "value": "cards", "label": "Cards" }, { "value": "team", "label": "Team" }, { "value": "mentors", "label": "Mentors" }, { "value": "cta", "label": "CTA" }, { "value": "quote", "label": "Quote" }], "default": "rich-text" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What We Do" },
+    { "type": "richtext", "id": "intro", "label": "Intro", "default": "<p>For the past one decade, we have been promoting Indian arts and crafts and providing a much-needed platform for the mostly poor and remotely situated artists on these arts.</p>" },
+    { "type": "richtext", "id": "body", "label": "Body", "default": "<p>The artisan sector has enormous untapped potential to drive economic and community development and preserve cultural heritage in the developing world.</p>" },
+    { "type": "richtext", "id": "closing", "label": "Closing line" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" }
+  ],
+  "blocks": [
+    { "type": "card", "name": "Card", "settings": [ { "type": "image_picker", "id": "image", "label": "Image" }, { "type": "url", "id": "image_url", "label": "External image URL" }, { "type": "text", "id": "name", "label": "Name" }, { "type": "text", "id": "role", "label": "Role" }, { "type": "richtext", "id": "text", "label": "Text" } ] }
+  ],
+  "presets": [{ "name": "Our story content" }]
+}
+{% endschema %}

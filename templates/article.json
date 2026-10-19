@@ -43,8 +43,8 @@
           "name": "Blog post details",
           "static": true,
           "settings": {
-            "show_date": false,
-            "show_author": false,
+            "show_date": true,
+            "show_author": true,
             "type_preset": "",
             "alignment": "center",
             "show_alignment": true,

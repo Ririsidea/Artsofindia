@@ -1,0 +1,28 @@
+<section class="our-story-hero color-{{ section.settings.color_scheme }}">
+  <div class="our-story-hero__inner page-width-content">
+    <p class="our-story-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    <h1>{{ section.settings.heading }}</h1>
+    <div class="our-story-hero__subheading">{{ section.settings.subheading }}</div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .our-story-hero { background: var(--color-background); color: var(--color-foreground); }
+  .our-story-hero__inner { padding-block: clamp(72px, 12vw, 148px); text-align: center; }
+  .our-story-hero__eyebrow { margin: 0 0 var(--padding-sm); font-size: var(--font-size--body-sm); letter-spacing: .12em; text-transform: uppercase; opacity: .7; }
+  .our-story-hero h1 { margin: 0; }
+  .our-story-hero__subheading { max-width: 38rem; margin: var(--padding-md) auto 0; font-size: var(--font-size--lg); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Our story hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "ARTSofINDIA" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Our Story" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Reviving India's traditional arts, one artisan at a time." },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" }
+  ],
+  "presets": [{ "name": "Our story hero" }]
+}
+{% endschema %}

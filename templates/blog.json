@@ -73,8 +73,8 @@
               "name": "t:names.details",
               "static": true,
               "settings": {
-                "show_date": false,
-                "show_author": false,
+                "show_date": true,
+                "show_author": true,
                 "type_preset": "",
                 "alignment": "left",
                 "show_alignment": false,
