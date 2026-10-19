@@ -1,0 +1,107 @@
+<div class="contact-info" {{ block.shopify_attributes }}>
+  {% if block.settings.heading != blank %}
+    <h2 class="contact-info__heading h6">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="contact-info__items">
+    {% if block.settings.address != blank %}
+      <p class="contact-info__item">
+        <strong>Address:</strong><br>
+        {{ block.settings.address | escape | newline_to_br }}
+      </p>
+    {% endif %}
+
+    {% if block.settings.phone != blank %}
+      {% assign phone_href = block.settings.phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' %}
+      <p class="contact-info__item">
+        <strong>Phone:</strong><br>
+        <a class="contact-info__link" href="tel:{{ phone_href }}">{{ block.settings.phone | escape }}</a>
+      </p>
+    {% endif %}
+
+    {% if block.settings.email != blank %}
+      <p class="contact-info__item">
+        <strong>Email:</strong><br>
+        <a class="contact-info__link" href="mailto:{{ block.settings.email | strip | escape }}">{{ block.settings.email | escape }}</a>
+      </p>
+    {% endif %}
+
+    {% if block.settings.gst_number != blank %}
+      <p class="contact-info__item">
+        <strong>GST Number:</strong><br>
+        {{ block.settings.gst_number | escape }}
+      </p>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .contact-info {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .contact-info__heading {
+    margin-block: 0 var(--spacing--size);
+  }
+
+  .contact-info__items {
+    max-width: 34rem;
+  }
+
+  .contact-info__item {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-info__item + .contact-info__item {
+    margin-block-start: var(--spacing--size);
+  }
+
+  .contact-info__link {
+    color: inherit;
+  }
+
+  .contact-info__link:hover {
+    color: var(--color-foreground-heading);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Contact info",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "CONTACT INFO"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address",
+      "default": "SANSKRITI, X-101, Purva Fairmont, 24th Main, Sector-2, HSR Layout, Bangalore, INDIA 560034"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone",
+      "default": "+91 (988) 002-7443"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email",
+      "default": "info@artsofindia.in"
+    },
+    {
+      "type": "text",
+      "id": "gst_number",
+      "label": "GST Number",
+      "default": "29ABVFS3789E1Z"
+    }
+  ]
+}
+{% endschema %}

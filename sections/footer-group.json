@@ -1,12 +1,4 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
+
 {
   "type": "footer",
   "name": "Footer",
@@ -380,23 +372,14 @@
                   },
                   "blocks": {
                     "menu_iwpjC7": {
-                      "type": "menu",
-                      "name": "t:names.menu",
+                      "type": "contact-info",
+                      "name": "Contact info",
                       "settings": {
-                        "menu": "",
-                        "heading": "CUSTOMER CARE",
-                        "menu_spacing": 12,
-                        "show_as_accordion": false,
-                        "accordion_icon": "caret",
-                        "accordion_dividers": false,
-                        "inherit_color_scheme": true,
-                        "color_scheme": "",
-                        "heading_preset": "h6",
-                        "link_preset": "paragraph",
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
+                        "heading": "CONTACT INFO",
+                        "address": "SANSKRITI, X-101, Purva Fairmont, 24th Main, Sector-2, HSR Layout, Bangalore, INDIA 560034",
+                        "phone": "+91 (988) 002-7443",
+                        "email": "info@artsofindia.in",
+                        "gst_number": "29ABVFS3789E1Z"
                       },
                       "blocks": {}
                     }
@@ -460,7 +443,7 @@
                       "type": "menu",
                       "name": "t:names.menu",
                       "settings": {
-                        "menu": "",
+                        "menu": "information",
                         "heading": "INFORMATION",
                         "menu_spacing": 12,
                         "show_as_accordion": false,

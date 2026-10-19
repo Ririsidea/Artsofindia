@@ -7,7 +7,7 @@ class AccordionCustom extends HTMLElement {
   get details() {
     const details = this.querySelector('details');
 
-    if (!(details instanceof HTMLDetailsElement)) throw new Error('Details element not found');
+    if (!(details insCUSTOMER CAREtanceof HTMLDetailsElement)) throw new Error('Details element not found');
 
     return details;
   }

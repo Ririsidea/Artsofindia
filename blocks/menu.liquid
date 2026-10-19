@@ -50,7 +50,7 @@
       </summary>
 
       <div class="details-content">
-        {% if menu %}
+        {% if menu and menu.links != blank %}
           <ul class="list-unstyled">
             {% for link in menu.links %}
               <li class="menu__item {{ block.settings.link_preset }}">
@@ -59,6 +59,21 @@
                 </a>
               </li>
             {% endfor %}
+          </ul>
+        {% elsif heading == 'INFORMATION' %}
+          {% comment %}
+            Preview fallback for the INFORMATION footer column until the
+            information navigation menu is created in Shopify admin.
+          {% endcomment %}
+          <ul class="list-unstyled">
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}pages/our-story">Our Story</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.search_url }}">Advanced Search</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}sitemap.xml">Site Map</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}policies/terms-of-service">Terms &amp; Conditions</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}pages/size-chart">Size Charts</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}policies/privacy-policy">Privacy &amp; Cookie Policy</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}blogs/news">Blog</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}pages/press-releases">Press Releases</a></li>
           </ul>
         {% endif %}
       </div>
