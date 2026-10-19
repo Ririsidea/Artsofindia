@@ -26,10 +26,25 @@
             "case": "uppercase"
           },
           "blocks": {}
+        },
+        "announcement_Gm3HeM": {
+          "type": "_announcement",
+          "name": "t:names.announcement",
+          "settings": {
+            "text": "&nbsp;Up to 40% OFF on Selected Items&nbsp;",
+            "link": "",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "announcement_KMAGKG"
+        "announcement_KMAGKG",
+        "announcement_Gm3HeM"
       ],
       "name": "t:names.announcement_bar",
       "settings": {
@@ -67,6 +82,8 @@
             "featured_products_aspect_ratio": "4 / 5",
             "featured_collections_aspect_ratio": "16 / 9",
             "image_border_radius": 0,
+            "product_title_case": "default",
+            "collection_title_case": "default",
             "color_scheme": "",
             "menu_font_style": "inverse",
             "type_font_primary_link": "secondary",
