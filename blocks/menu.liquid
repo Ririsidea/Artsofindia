@@ -4,6 +4,10 @@
   assign menu = block.settings.menu
   assign heading = block.settings.heading
   assign color_scheme = block.settings.color_scheme
+  assign is_footer_menu = false
+  if section.type == 'footer'
+    assign is_footer_menu = true
+  endif
   assign show_as_accordion = block.settings.show_as_accordion
   if show_as_accordion == true and block.settings.accordion_dividers == true
     assign dividers_enabled = true
@@ -11,6 +15,32 @@
 %}
 
 {% if menu != blank or heading != blank %}
+  {% if is_footer_menu %}
+    <div class="menu footer-menu" {{ block.shopify_attributes }}>
+      {% if heading != blank %}<div class="menu__heading {{ block.settings.heading_preset }}">{{ heading }}</div>{% endif %}
+      <div class="footer-menu__content">
+        {% if menu and menu.links != blank %}
+          <ul class="list-unstyled">
+            {% for link in menu.links %}
+              <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        {% elsif heading == 'INFORMATION' %}
+          {% comment %}Preview fallback until the INFORMATION menu is created in Shopify admin.{% endcomment %}
+          <ul class="list-unstyled">
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}pages/our-story">Our Story</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.search_url }}">Advanced Search</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}sitemap.xml">Site Map</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}policies/terms-of-service">Terms &amp; Conditions</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}pages/size-chart">Size Charts</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}policies/privacy-policy">Privacy &amp; Cookie Policy</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}blogs/news">Blog</a></li>
+            <li class="menu__item {{ block.settings.link_preset }}"><a href="{{ routes.root_url }}pages/press-releases">Press Releases</a></li>
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
   <accordion-custom
     class="
       menu
@@ -79,6 +109,7 @@
       </div>
     </details>
   </accordion-custom>
+  {% endif %}
 {% endif %}
 
 {% stylesheet %}

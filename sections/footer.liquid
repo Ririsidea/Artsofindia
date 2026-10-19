@@ -32,6 +32,96 @@
   </div>
 </div>
 
+{% stylesheet %}
+  /* Footer columns stay open and use the same grid at every viewport size. */
+  footer .group-block-content:has(> .group-block > .group-block-content > .footer-menu) > .group-block > .group-block-content {
+    display: grid;
+    grid-template-columns: 1px minmax(0, 1fr) 1px minmax(0, 1fr) 1px minmax(0, 1fr);
+    gap: var(--gap-lg);
+    align-items: start;
+  }
+
+  footer .group-block-content:has(> .group-block > .group-block-content > .footer-menu) > .group-block > .group-block-content > .group-block {
+    width: 100%;
+    min-width: 0;
+  }
+
+  footer .group-block-content:has(> .group-block > .group-block-content > .footer-menu) > .group-block > .group-block-content > .divider {
+    align-self: stretch;
+    min-height: 100%;
+  }
+
+  footer .group-block-content:has(> .group-block > .group-block-content > .footer-menu) > .group-block > .group-block-content > .divider .divider__line {
+    width: 1px;
+    min-height: 100%;
+    border-bottom: 0;
+    border-right: var(--divider-border-thickness) solid var(--color-border);
+  }
+
+  footer .menu__heading,
+  footer .contact-info__heading {
+    margin-block: 0;
+    line-height: 1.2;
+  }
+
+  footer .footer-menu__content,
+  footer .contact-info__items {
+    margin-block-start: var(--padding-md);
+  }
+
+  footer .footer-menu a,
+  footer .contact-info a {
+    position: relative;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  footer .footer-menu a::after,
+  footer .contact-info a::after {
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    content: '';
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 180ms ease;
+  }
+
+  footer .footer-menu a:hover::after,
+  footer .footer-menu a:focus-visible::after,
+  footer .contact-info a:hover::after,
+  footer .contact-info a:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  footer .footer-menu a:focus-visible,
+  footer .contact-info a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  @media screen and (width < 990px) {
+    footer .group-block-content:has(> .group-block > .group-block-content > .footer-menu) > .group-block > .group-block-content {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    footer .group-block-content:has(> .group-block > .group-block-content > .footer-menu) > .group-block > .group-block-content > .divider {
+      display: none;
+    }
+  }
+
+  @media screen and (width < 590px) {
+    footer .group-block-content:has(> .group-block > .group-block-content > .footer-menu) > .group-block > .group-block-content {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--gap-xl);
+    }
+  }
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "t:names.footer",
