@@ -17,13 +17,31 @@
           "name": "Title",
           "settings": {
             "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
             "type_preset": "h2",
-            "width": "100%"
-          }
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
         "page-content": {
           "type": "page-content",
-          "settings": {}
+          "settings": {},
+          "blocks": {}
         }
       },
       "block_order": [
@@ -31,13 +49,41 @@
         "page-content"
       ],
       "settings": {
+        "content_direction": "column",
         "gap": 32,
+        "color_scheme": "",
         "padding-block-start": 40,
         "padding-block-end": 80
+      }
+    },
+    "our_story_hero_n94UUk": {
+      "type": "our-story-hero",
+      "name": "Our story hero",
+      "settings": {
+        "eyebrow": "ARTSofINDIA",
+        "heading": "Our Story",
+        "subheading": "Reviving India's traditional arts, one artisan at a time.",
+        "color_scheme": ""
+      }
+    },
+    "our_story_content_yQUkng": {
+      "type": "our-story-content",
+      "name": "Our story content",
+      "settings": {
+        "layout": "rich-text",
+        "heading": "What We Do",
+        "intro": "<p>For the past one decade, we have been promoting Indian arts and crafts and providing a much-needed platform for the mostly poor and remotely situated artists on these arts.</p>",
+        "body": "<p>The artisan sector has enormous untapped potential to drive economic and community development and preserve cultural heritage in the developing world.</p>",
+        "closing": "",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": ""
       }
     }
   },
   "order": [
-    "main"
+    "main",
+    "our_story_hero_n94UUk",
+    "our_story_content_yQUkng"
   ]
 }
