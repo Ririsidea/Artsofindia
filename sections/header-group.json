@@ -14,6 +14,20 @@
     "header_announcements_pbXTDf": {
       "type": "header-announcements",
       "blocks": {
+        "announcement_jkCB8N": {
+          "type": "_announcement",
+          "name": "t:names.announcement",
+          "settings": {
+            "text": "&nbsp;100% Secure Payment&nbsp;",
+            "link": "",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        },
         "announcement_KMAGKG": {
           "type": "_announcement",
           "settings": {
@@ -43,6 +57,7 @@
         }
       },
       "block_order": [
+        "announcement_jkCB8N",
         "announcement_KMAGKG",
         "announcement_Gm3HeM"
       ],
