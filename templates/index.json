@@ -925,7 +925,15 @@
       ],
       "name": "t:names.collections_grid",
       "settings": {
-        "collection_list": [],
+        "collection_list": [
+          "eco-friendly-organic",
+          "embroidery-of-india",
+          "fashion",
+          "games-puzzles",
+          "home-living",
+          "sculptures-of-india",
+          "arts-of-india"
+        ],
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "columns": 5,
