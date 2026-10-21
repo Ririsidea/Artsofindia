@@ -226,8 +226,8 @@
               "name": "t:names.product_image",
               "settings": {
                 "product": "{{ closest.product }}",
-                "image_ratio": "portrait",
-                "border": "none",
+                "image_ratio": "square",
+                "border": "solid",
                 "border_width": 1,
                 "border_opacity": 100,
                 "border_radius": 0,
