@@ -40,15 +40,17 @@
               {%- if country_style == true -%}
                 <span
                   class="icon-flag"
+                  data-geo-country-flag
                   style="
                     background-image: url({{- localization.country | image_url: width: 32 }});
                     --size-shadow: {{ flag_shadow_size }}px;
                     --color-shadow: rgb(from var(--color-foreground) r g b / {{ flag_shadow_opacity }});
+                    {% unless request.design_mode %}display: none;{% endunless %}
                   "
                 ></span>
               {%- endif -%}
-              <span class="currency-code">
-                {{- localization.country.currency.iso_code -}}
+              <span class="geo-country-name" data-geo-country-name>
+                {% if request.design_mode %}{{ localization.country.name | escape }}{% else %}Detecting country...{% endif %}
               </span>
             </div>
           {%- endif -%}

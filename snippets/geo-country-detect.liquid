@@ -1,0 +1,268 @@
+{%- comment -%}
+  Detects the current public IP country on page load or explicit refresh.
+
+  Shopify Markets remains the source of truth for supported countries and
+  official country metadata. This snippet never stores IP or location data in browser
+  storage and never falls back to a previous country or a hardcoded default.
+
+  Keep GLC automatic switching disabled so only one detector changes the
+  Shopify localization context.
+{%- endcomment -%}
+
+{%- unless request.design_mode -%}
+  {%- if localization.available_countries.size > 1 -%}
+    <div class="geo-country-detect" data-geo-country-detect>
+      <span class="geo-country-detect__status" data-geo-country-status role="status" aria-live="polite">
+        Detecting country...
+      </span>
+      <button
+        type="button"
+        class="button button-unstyled geo-country-detect__refresh"
+        data-geo-country-refresh
+      >
+        Refresh location
+      </button>
+    </div>
+
+    <script>
+      (() => {
+        'use strict';
+
+        // TEMPORARY DIAGNOSTICS: remove or set false after the country issue is resolved.
+        const debugEnabled = true;
+        const debug = (event, details = {}) => {
+          if (debugEnabled) console.info('[Country Detection][DEBUG]', event, details);
+        };
+
+        const root = document.querySelector('[data-geo-country-detect]');
+        debug('init:begin', {
+          readyState: document.readyState,
+          rootFound: Boolean(root),
+          url: window.location.pathname,
+        });
+        if (!root) {
+          debug('init:stop', { reason: 'detector-root-not-found' });
+          return;
+        }
+        if (window.GeoCountryDetection?.root === root) {
+          debug('init:stop', { reason: 'same-root-already-initialized' });
+          return;
+        }
+        if (window.GeoCountryDetection?.destroy) {
+          debug('init:cleanup-previous-instance');
+          window.GeoCountryDetection.destroy();
+        }
+
+        const availableCountries = {
+          {% for country in localization.available_countries %}
+            {{ country.iso_code | json }}: {
+              name: {{ country.name | json }},
+              flag: {{ country | image_url: width: 32 | json }}
+            }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        };
+        const apiTimeout = 4000;
+        let activeController = null;
+        let requestId = 0;
+        let latestHeaderLocation = null;
+        let headerUnavailable = false;
+
+        debug('liquid:available-countries', {
+          count: Object.keys(availableCountries).length,
+          countries: Object.keys(availableCountries),
+        });
+
+        const status = root?.querySelector('[data-geo-country-status]');
+        const refreshButton = root?.querySelector('[data-geo-country-refresh]');
+        debug('dom:hooks', {
+          statusFound: Boolean(status),
+          refreshButtonFound: Boolean(refreshButton),
+          headerNameElements: document.querySelectorAll('[data-geo-country-name]').length,
+          headerFlagElements: document.querySelectorAll('[data-geo-country-flag]').length,
+        });
+
+        const setStatus = (message) => {
+          if (status) status.textContent = message;
+          debug('ui:status', { message, statusElementFound: Boolean(status) });
+        };
+
+        const setHeaderLocation = (countryCode) => {
+          const country = availableCountries[countryCode];
+          if (!country) return false;
+
+          latestHeaderLocation = countryCode;
+          headerUnavailable = false;
+          document.querySelectorAll('[data-geo-country-name]').forEach((element) => {
+            element.textContent = country.name;
+          });
+          document.querySelectorAll('[data-geo-country-flag]').forEach((element) => {
+            element.style.backgroundImage = `url("${country.flag}")`;
+            element.style.display = '';
+          });
+          debug('display:update:success', {
+            countryCode,
+            countryName: country.name,
+            updatedNames: document.querySelectorAll('[data-geo-country-name]').length,
+            updatedFlags: document.querySelectorAll('[data-geo-country-flag]').length,
+          });
+          return true;
+        };
+
+        const setHeaderUnavailable = () => {
+          latestHeaderLocation = null;
+          headerUnavailable = true;
+          document.querySelectorAll('[data-geo-country-name]').forEach((element) => {
+            element.textContent = 'Country unavailable';
+          });
+          document.querySelectorAll('[data-geo-country-flag]').forEach((element) => {
+            element.style.backgroundImage = 'none';
+            element.style.display = 'none';
+          });
+          debug('display:update:unavailable');
+        };
+
+        const sectionLoadHandler = () => {
+          debug('section:load', {
+            latestHeaderLocation,
+            headerUnavailable,
+            headerNameElements: document.querySelectorAll('[data-geo-country-name]').length,
+            headerFlagElements: document.querySelectorAll('[data-geo-country-flag]').length,
+          });
+          if (latestHeaderLocation) {
+            setHeaderLocation(latestHeaderLocation);
+          } else if (headerUnavailable) {
+            setHeaderUnavailable();
+          }
+        };
+
+        const fetchCountry = (url, parentSignal) => {
+          const controller = new AbortController();
+          const timeoutId = window.setTimeout(() => {
+            debug('request:timeout', { provider: url, timeoutMs: apiTimeout });
+            controller.abort();
+          }, apiTimeout);
+          const abortRequest = () => controller.abort();
+
+          parentSignal.addEventListener('abort', abortRequest, { once: true });
+          debug('request:start', {
+            provider: url,
+            cacheMode: 'no-store',
+            signalAborted: parentSignal.aborted,
+          });
+
+          return fetch(url, {
+            signal: controller.signal,
+            cache: 'no-store',
+            headers: { Accept: 'application/json' },
+            })
+            .then((response) => {
+              debug('response:status', { provider: url, status: response.status, ok: response.ok });
+              if (!response.ok) throw new Error(`HTTP ${response.status}`);
+              return response.json();
+            })
+            .then((data) => {
+              const countryCode = String(data?.country_code || '').trim().toUpperCase();
+              const apiCountryName = String(data?.country || '').trim();
+              debug('response:country', { provider: url, countryCode, countryName: apiCountryName || '(missing)' });
+              if (data?.success === false || !/^[A-Z]{2}$/.test(countryCode) || !apiCountryName) {
+                throw new Error('Invalid country response');
+              }
+              return countryCode;
+            })
+            .finally(() => {
+              window.clearTimeout(timeoutId);
+              parentSignal.removeEventListener('abort', abortRequest);
+              debug('request:cleanup', { provider: url });
+            });
+        };
+
+        const detectCountry = (signal) =>
+          fetchCountry('https://ipwho.is/', signal).catch((error) => {
+            debug('primary:failed', {
+              error: error?.name || 'request-error',
+              parentSignalAborted: signal.aborted,
+            });
+            if (signal.aborted) throw error;
+            debug('fallback:start', { provider: 'https://get.geojs.io/v1/ip/geo.json' });
+            return fetchCountry('https://get.geojs.io/v1/ip/geo.json', signal);
+          });
+        const applyCountry = (countryCode, id) => {
+          if (id !== requestId) {
+            debug('result:ignored-stale', { resultRequestId: id, latestRequestId: requestId });
+            return;
+          }
+          const country = availableCountries[countryCode];
+          debug('country:lookup', { countryCode, supported: Boolean(country) });
+          if (!country || !setHeaderLocation(countryCode)) {
+            setHeaderUnavailable();
+            setStatus('Country unavailable');
+            return;
+          }
+
+          setStatus(`Location: ${country.name}`);
+        };
+
+        const refresh = () => {
+          const id = ++requestId;
+          debug('detection:start', { requestId: id, previousRequestActive: Boolean(activeController) });
+          if (activeController) {
+            debug('detection:abort-previous', { previousRequestId: id - 1 });
+            activeController.abort();
+          }
+          const controller = new AbortController();
+          activeController = controller;
+          setHeaderUnavailable();
+          setStatus('Detecting country...');
+          if (refreshButton) refreshButton.disabled = true;
+
+          return Promise.resolve()
+            .then(() => detectCountry(controller.signal))
+            .then((countryCode) => applyCountry(countryCode, id))
+            .catch((error) => {
+              if (id !== requestId) {
+                debug('detection:failure-ignored-stale', { requestId: id, latestRequestId: requestId });
+                return;
+              }
+              debug('detection:failed', { error: error?.name || error?.message || 'unknown-error' });
+              setHeaderUnavailable();
+              setStatus('Country unavailable');
+            })
+            .finally(() => {
+              if (id === requestId && refreshButton) refreshButton.disabled = false;
+            });
+        };
+
+        const refreshHandler = () => refresh();
+        const destroy = () => {
+          debug('destroy:start', { requestId, activeRequest: Boolean(activeController) });
+          activeController?.abort();
+          document.removeEventListener('shopify:section:load', sectionLoadHandler);
+          refreshButton?.removeEventListener('click', refreshHandler);
+          if (window.GeoCountryDetection?.root === root) delete window.GeoCountryDetection;
+          debug('destroy:complete');
+        };
+
+        window.GeoCountryDetection = { destroy, refresh, root };
+        document.addEventListener('shopify:section:load', sectionLoadHandler);
+        refreshButton?.addEventListener('click', refreshHandler);
+        debug('init:complete', { requestId: 0 });
+        refresh();
+      })();
+    </script>
+
+    
+  {%- endif -%}
+{%- endunless -%}
+{% stylesheet %}
+      .geo-country-detect {
+        align-items: center;
+        display: flex;
+        gap: var(--gap-xs);
+        justify-content: center;
+        padding-block: var(--padding-xs);
+      }
+
+      .geo-country-detect__status {
+        color: var(--color-foreground);
+      }
+    {% endstylesheet %}
