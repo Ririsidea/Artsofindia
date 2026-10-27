@@ -47,18 +47,12 @@
     >
       <span class="visually-hidden">{{ 'accessibility.localization_region_and_language' | t }}</span>
       {% if show_country %}
-        {% if country_style == true %}
-          <span
-            class="icon-flag"
-            style="
-              background-image: url({{- localization.country | image_url: width: 32 }});
-              --size-shadow: {{ shadow_size }}px;
-              --color-shadow: rgb(from var(--color-foreground) r g b / {{ flag_shadow_opacity }});
-            "
-          ></span>
-        {% endif %}
-        <span class="currency-code">
-          {{- localization.country.currency.iso_code -}}
+        <span
+          class="icon-flag"
+          style="background-image: url('{{ localization.country | image_url: width: 64 }}');"
+        ></span>
+        <span class="currency-codes">
+          <span class="currency-codes__currency">{{ localization.country.currency.iso_code }}</span>
         </span>
       {% endif %}
 

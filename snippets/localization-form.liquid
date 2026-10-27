@@ -156,12 +156,18 @@
                   <span class="svg-wrapper icon-checkmark">
                     {{- 'icon-checkmark.svg' | inline_asset_content -}}
                   </span>
+                  <img
+                    class="country-list-flag"
+                    src="{{ country | image_url: width: 40 }}"
+                    alt=""
+                    width="20"
+                    height="20"
+                    loading="eager"
+                    decoding="async"
+                  >
                   <span class="country">{{- country.name }}</span>
                   <span
                     class="localization-form__currency motion-reduce"
-                    {% unless show_currencies %}
-                      hidden
-                    {% endunless %}
                   >
                     {{ country.currency.iso_code }}
                     {{ country.currency.symbol -}}
@@ -211,12 +217,18 @@
                 <span class="svg-wrapper icon-checkmark">
                   {{- 'icon-checkmark.svg' | inline_asset_content -}}
                 </span>
+                <img
+                  class="country-list-flag"
+                  src="{{ country | image_url: width: 40 }}"
+                  alt=""
+                  width="20"
+                  height="20"
+                  loading="eager"
+                  decoding="async"
+                >
                 <span class="country">{{- country.name }}</span>
                 <span
                   class="localization-form__currency motion-reduce"
-                  {% unless show_currencies %}
-                    hidden
-                  {% endunless %}
                 >
                   {{ country.currency.iso_code }}
                   {{ country.currency.symbol -}}
@@ -350,49 +362,78 @@
     display: flex;
     position: relative;
     align-items: center;
-    gap: 4px;
-    font-weight: var(--menu-top-level-font-weight);
-    padding-inline: var(--padding-2xs);
-    margin-inline: calc(-1 * var(--padding-2xs));
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid rgb(from var(--color-foreground) r g b / 20%);
+    border-radius: 999px;
+    background-color: transparent;
+    color: var(--color-foreground);
+    transition:
+      background-color var(--animation-speed) var(--animation-easing),
+      border-color var(--animation-speed) var(--animation-easing);
   }
 
   .dropdown-localization__button .icon-caret {
-    height: var(--icon-size-xs);
-    width: var(--icon-size-xs);
-    right: var(--margin-xs);
-    top: calc(50% - var(--padding-2xs));
+    width: 12px;
+    height: 12px;
     flex-shrink: 0;
     transition: transform var(--animation-speed) var(--animation-easing);
   }
 
   .drawer-localization__button .icon-flag,
   .dropdown-localization__button .icon-flag {
-    width: var(--icon-size-sm);
-    height: var(--icon-size-sm);
-    clip-path: circle(50%);
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    border-radius: 50%;
     background-position: center;
     background-size: cover;
-    margin-inline-end: 4px;
     position: relative;
+    box-shadow: 0 0 0 1px rgb(from var(--color-foreground) r g b / 15%);
   }
 
-  .icon-flag::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    box-shadow: inset 0 0 var(--size-shadow) var(--color-shadow);
-    border-radius: 50%;
+  .currency-codes {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .currency-codes__country {
+    font-weight: 700;
+  }
+
+  .currency-codes__country::after {
+    content: '·';
+    margin-inline-start: 0.45rem;
+    font-weight: 400;
+  }
+
+  .currency-codes__currency {
+    opacity: 0.7;
+  }
+
+  .currency-codes__country::after {
+    content: '\00B7';
   }
 
   .dropdown-localization__button[aria-expanded='true'] .icon-caret svg {
     transform: rotate(180deg);
   }
 
+  .dropdown-localization__button:hover {
+    background-color: rgb(from var(--color-foreground) r g b / 5%);
+    border-color: var(--color-foreground);
+  }
+
+  .dropdown-localization__button:focus-visible {
+    border-color: var(--color-foreground);
+  }
+
   .dropdown-localization__button,
   .dropdown-localization__button:hover {
-    box-shadow: none;
-    background-color: transparent;
-    border-color: transparent;
     color: var(--color-foreground);
   }
 
@@ -481,6 +522,17 @@
         font-weight: 500;
       }
     }
+  }
+
+  .country-list-flag {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    border-radius: 50%;
+    display: block;
+    object-fit: cover;
+    background-color: rgb(from var(--color-foreground) r g b / 8%);
+    box-shadow: 0 0 0 1px rgb(from var(--color-foreground) r g b / 15%);
   }
 
   .localization-form__list-item#no-results-message {
@@ -722,22 +774,10 @@
 
   dropdown-localization-component .localization-form__currency {
     width: max-content;
-    opacity: 0;
-    display: none;
-    transition: none;
-  }
-
-  dropdown-localization-component
-    :is(
-      .localization-form__list-item:hover,
-      .localization-form__list-item[aria-selected='true'],
-      .localization-form__list-item[aria-current='true']
-    )
-    .localization-form__currency {
-    opacity: 1;
-    color: var(--color-foreground-muted);
-    transition: opacity var(--animation-speed-slow) var(--animation-easing);
     display: block;
+    margin-inline-start: auto;
+    opacity: 0.7;
+    color: var(--color-foreground-muted);
   }
 
   .dropdown-localization .language-selector:where(:not(.top-shadow)) {
@@ -770,8 +810,21 @@
     align-items: center;
   }
 
+  .drawer-localization .currency-codes {
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  .drawer-localization__button {
+    min-height: 44px;
+  }
+
   .drawer-localization img {
     width: var(--icon-size-sm);
+  }
+
+  .drawer-localization .country-list-flag {
+    width: 20px;
   }
 
   .drawer-localization .localization-button__icon,

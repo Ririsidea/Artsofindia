@@ -105,7 +105,7 @@
 
   if show_country or show_language
     capture localization_markup
-      render 'dropdown-localization', show_country: show_country, show_language: show_language, country_style: section.settings.country_selector_style, localization_position: section.settings.localization_position
+      render 'dropdown-localization', show_country: show_country, show_language: show_language, localization_position: section.settings.localization_position
     endcapture
   endif
 
@@ -704,13 +704,6 @@
       "label": "t:settings.country_region",
       "info": "t:info.manage_countries_regions",
       "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "country_selector_style",
-      "label": "t:settings.flag",
-      "default": true,
-      "visible_if": "{{ section.settings.show_country }}"
     },
     {
       "type": "checkbox",

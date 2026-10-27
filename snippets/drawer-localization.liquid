@@ -37,18 +37,13 @@
         <div class="drawer-localization__button--label h6">
           {%- if show_country -%}
             <div class="mobile-localization mobile-localization--country link link--text">
-              {%- if country_style == true -%}
-                <span
-                  class="icon-flag"
-                  style="
-                    background-image: url({{- localization.country | image_url: width: 32 }});
-                    --size-shadow: {{ flag_shadow_size }}px;
-                    --color-shadow: rgb(from var(--color-foreground) r g b / {{ flag_shadow_opacity }});
-                  "
-                ></span>
-              {%- endif -%}
-              <span class="currency-code">
-                {{- localization.country.currency.iso_code -}}
+              <span
+                class="icon-flag"
+                style="background-image: url('{{ localization.country | image_url: width: 64 }}');"
+              ></span>
+              <span class="currency-codes">
+                <span class="currency-codes__country">{{ localization.country.iso_code }}</span>
+                <span class="currency-codes__currency">{{ localization.country.currency.iso_code }}</span>
               </span>
             </div>
           {%- endif -%}
